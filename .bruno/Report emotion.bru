@@ -1,0 +1,22 @@
+meta {
+  name: Report emotion
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://127.0.0.1:8080/user/reports
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmYWtlIiwiZXhwIjoxNzI4OTQwMzA0LCJpc192YWxpZCI6dHJ1ZX0.gs0J5UeseFw72A5j7wlVcHcUkkCzAsQRfaxVUpBwzUM
+}
+
+body:json {
+  {
+    "date": "qwe",
+    "rate": 1
+  }
+}
