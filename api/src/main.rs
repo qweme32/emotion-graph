@@ -1,5 +1,3 @@
-// mod api;
-// mod db;
 mod models;
 mod config;
 mod api;
@@ -13,7 +11,7 @@ use actix_web::{web, App, HttpServer};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let client = Client::with_uri_str("mongodb://localhost:27017")
+    let client = Client::with_uri_str("mongodb://mongo:27017")
         .await
         .expect("Failed to initialize MongoDB client");
 
@@ -41,9 +39,8 @@ async fn main() -> std::io::Result<()> {
                     ).clone()
                 )
             )
-            //.configure(api::config)  // Настраиваем API
     })
-    .bind("127.0.0.1:8080")?
+    .bind("0.0.0.0:8080")?
     .run()
     .await
 }

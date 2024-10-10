@@ -8,7 +8,7 @@ pub struct Config {
 
 impl Config {
     pub fn from_env() -> Self {
-        dotenv().ok();  // Загружаем переменные из .env файла
+        dotenv().ok();
 
         let secret_key = env::var("SECRET_KEY").expect("SECRET_KEY must be set");
 

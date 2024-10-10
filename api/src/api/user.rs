@@ -104,20 +104,21 @@ pub async fn get_reports(
                     ).timestamp_millis()
                 )
             },
-            "author": user.unwrap().id
+            "author": user.as_ref().unwrap().id
         })
+        .sort(doc! { "date": -1 })
         .await
         .unwrap()
         .try_collect()
         .await
         .unwrap();
 
-    HttpResponse::Ok().json(json!({ "ok": true, "reports": items }))
+    HttpResponse::Ok().json(json!({ "ok": true, "reports": items, "author": user.as_ref().unwrap().username }))
 }
 
 pub async fn send_user_report(
     db: web::Data<Database>,
-    config: web::Data<Config>, // Получаем доступ к конфигурации
+    config: web::Data<Config>,
     report: web::Json<dto::user::ReportDto>,
     req: HttpRequest,
 ) -> impl Responder {
@@ -152,6 +153,37 @@ pub async fn send_user_report(
             reports.insert_one(new_report).await.unwrap();
 
             HttpResponse::Ok().json(json!({ "ok": true }))
+        }
+        None => HttpResponse::Unauthorized().json(json!({ "ok": false })),
+    }
+}
+
+pub async fn get_me(
+    db: web::Data<Database>,
+    config: web::Data<Config>,
+    req: HttpRequest,
+) -> impl Responder {
+    let users: Collection<User> = db.collection("users");
+
+    let mut user: Option<User> = None;
+
+    if let Some(auth_header) = req.headers().get(header::AUTHORIZATION) {
+        if let Ok(auth_str) = auth_header.to_str() {
+            if let Some(token) = auth_str.strip_prefix("Bearer ") {
+                let jwt = UserJwt::from(token, &config.secret_key);
+
+                if jwt.is_valid == true {
+                    let filter = doc! { "username": jwt.sub };
+
+                    user = users.find_one(filter).await.unwrap();
+                }
+            }
+        }
+    }
+
+    match user {
+        Some(user) => {
+            HttpResponse::Ok().json(json!({ "ok": true, "username": user.username }))
         }
         None => HttpResponse::Unauthorized().json(json!({ "ok": false })),
     }

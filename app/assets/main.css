@@ -1,0 +1,21 @@
+:root {
+    --light: #fff;
+    --background: #202021;
+    --background-second: #242426;
+    --secondary: #43424B;
+    --text: #FFFFFF50;
+    --primary: #7E79BC;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--background);
+    font-family: "JetBrains Mono", monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "JetBrains Mono", monospace;
+}

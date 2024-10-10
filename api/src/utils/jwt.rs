@@ -1,11 +1,10 @@
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 
-// Структура для данных, которые будут храниться в JWT
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserJwt {
-    pub sub: String, // Поле с идентификатором пользователя
-    pub exp: usize,  // Время истечения токена (в секундах с 1970 года)
+    pub sub: String,
+    pub exp: usize,
     pub is_valid: bool,
 }
 
